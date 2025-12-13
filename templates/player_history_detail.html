@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ player_name }}的盈亏明细</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .player-info {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .player-info h2 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .total-profit {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .profit {
+            color: #28a745;
+        }
+
+        .loss {
+            color: #dc3545;
+        }
+
+        .zero {
+            color: #6c757d;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .detail-table th,
+        .detail-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .detail-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .detail-table tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            padding: 40px 0;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            .player-info h2 {
+                font-size: 16px;
+            }
+
+            .total-profit {
+                font-size: 20px;
+            }
+
+            .detail-table th,
+            .detail-table td {
+                padding: 8px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="/player_history" class="back-link">← 返回玩家历史总盈亏</a>
+        <h1>{{ player_name }}的盈亏明细</h1>
+
+        <div class="player-info">
+            <h2>总盈亏</h2>
+            <div class="total-profit">
+                {% if total_profit > 0 %}
+                <span class="profit">+{{ total_profit }}</span>
+                {% elif total_profit < 0 %} <span class="loss">{{ total_profit }}</span>
+                    {% else %}
+                    <span class="zero">0</span>
+                    {% endif %}
+            </div>
+        </div>
+
+        {% if player_details %}
+        <table class="detail-table">
+            <thead>
+                <tr>
+                    <th>操作时间</th>
+                    <th>初始筹码</th>
+                    <th>最终筹码</th>
+                    <th>盈亏金额</th>
+                    <th>买(卖)的筹码</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for detail in player_details %}
+                <tr>
+                    <td>{{ detail.timestamp }}</td>
+                    <td>{{ detail.initial_chips }}</td>
+                    <td>{{ detail.final_chips }}</td>
+                    <td>
+                        {% if detail.profit > 0 %}
+                        <span class="profit">+{{ detail.profit }}</span>
+                        {% elif detail.profit < 0 %} <span class="loss">{{ detail.profit }}</span>
+                            {% else %}
+                            <span class="zero">0</span>
+                            {% endif %}
+                    </td>
+                    <td>
+                        {% if detail.transfer_info %}
+                        {% if detail.is_transfer_in %}
+                        <span class="profit">{{ detail.transfer_info }}</span>
+                        {% elif detail.is_transfer_out %}
+                        <span class="loss">{{ detail.transfer_info }}</span>
+                        {% else %}
+                        {{ detail.transfer_info }}
+                        {% endif %}
+                        {% else %}
+                        -{% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-message">
+            <p>暂无盈亏明细记录</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+
+</html>

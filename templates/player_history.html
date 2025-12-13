@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>玩家历史总盈亏</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .player-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        
+        .player-table th,
+        .player-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .player-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .player-table tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .profit {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .loss {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .zero {
+            color: #6c757d;
+        }
+        
+        .ranking {
+            font-weight: bold;
+            color: #007bff;
+        }
+        
+        .empty-message {
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            padding: 40px 0;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+            
+            .player-table th,
+            .player-table td {
+                padding: 8px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← 返回转账计算器</a>
+        <h1>玩家历史总盈亏</h1>
+        
+        {% if players %}
+        <table class="player-table">
+            <thead>
+                <tr>
+                    <th>排名</th>
+                    <th>玩家姓名</th>
+                    <th>总盈亏金额</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for player in players %}
+                <tr>
+                    <td class="ranking">{{ loop.index }}</td>
+                    <td>{{ player.name }}</td>
+                    <td>
+                        {% if player.total_profit > 0 %}
+                            <span class="profit">+{{ player.total_profit }}</span>
+                        {% elif player.total_profit < 0 %}
+                            <span class="loss">{{ player.total_profit }}</span>
+                        {% else %}
+                            <span class="zero">0</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="/player_history_detail/{{ player.name }}" style="color: #007bff; text-decoration: none; font-weight: bold;">查看明细</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-message">
+            <p>暂无历史记录</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

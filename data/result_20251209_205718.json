@@ -1,0 +1,21 @@
+{
+  "timestamp": "20251209_205718",
+  "initial_chips": 200,
+  "players": [
+    {
+      "name": "蒋飞颖",
+      "finalChips": 0
+    },
+    {
+      "name": "庞泽钊",
+      "finalChips": 400
+    }
+  ],
+  "transactions": [
+    {
+      "from": "蒋飞颖",
+      "to": "庞泽钊",
+      "amount": 200
+    }
+  ]
+}

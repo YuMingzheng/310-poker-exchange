@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>转账计算器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .player-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            position: relative;
+            padding-left: 30px;
+            /* 为行号留出空间 */
+        }
+
+        /* 行号样式 - 在所有屏幕尺寸下显示 */
+        .player-row::before {
+            content: attr(data-row-number);
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            text-align: center;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .player-row input {
+            flex: 1;
+            min-width: 100px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .player-name,
+        .player-chips {
+            width: calc(40% - 5px);
+        }
+
+        .player-row button {
+            padding: 8px 12px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            /* 修改为水平布局，使三个组件在同一行 */
+            .player-row {
+                flex-direction: row;
+                align-items: center;
+                flex-wrap: nowrap;
+                /* 禁止换行 */
+                /* 行号样式已在主样式中定义 */
+            }
+
+            .player-name {
+                flex: 2;
+                min-width: 60px;
+                margin-right: 5px;
+            }
+
+            .player-chips {
+                flex: 1;
+                min-width: 50px;
+                margin-right: 5px;
+            }
+
+            .player-row button {
+                flex: none;
+                align-self: center;
+                width: auto;
+                margin-left: 0;
+                padding: 5px 10px;
+                font-size: 14px;
+            }
+
+
+
+            .controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .controls button {
+                width: 100%;
+            }
+        }
+
+        .player-row button:hover {
+            background-color: #c82333;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #addPlayer {
+            background-color: #28a745;
+            color: white;
+        }
+
+        #addPlayer:hover {
+            background-color: #218838;
+        }
+
+        #calculate {
+            background-color: #007bff;
+            color: white;
+        }
+
+        #calculate:hover {
+            background-color: #0069d9;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .transaction {
+            padding: 5px 0;
+        }
+
+        .win {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .lose {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>转账计算器</h1>
+        <p style="text-align: center; margin-bottom: 20px;">
+            <a href="/player_history" style="color: #007bff; text-decoration: none;">
+                查看玩家历史总盈亏 →
+            </a>
+        </p>
+        <p>初始筹码数量: <input type="number" id="initialChips" value="200" min="1"></p>
+
+        <div id="playersContainer">
+            <!-- Player rows will be dynamically added here -->
+        </div>
+
+        <div class="controls">
+            <button type="button" id="addPlayer" onclick="addPlayer()">添加玩家</button>
+            <button type="button" id="calculate" onclick="calculateTransactions()">计算结算</button>
+        </div>
+
+        <div id="result" class="result">
+            <h2>结算结果:</h2>
+            <div id="transactions"></div>
+        </div>
+    </div>
+
+    <script>
+        // 用户选择功能已改为直接文本输入
+
+        // 页面加载时添加默认的7个玩家行
+        window.onload = function () {
+            for (let i = 0; i < 7; i++) {
+                addPlayer();
+            }
+        };
+
+        // 用户选择功能已改为直接文本输入
+
+        function addPlayer() {
+            const container = document.getElementById('playersContainer');
+            const newRow = document.createElement('div');
+            newRow.className = 'player-row';
+
+            // 创建姓名输入框
+            const nameInput = document.createElement('input');
+            nameInput.type = 'text';
+            nameInput.placeholder = '姓名';
+            nameInput.className = 'player-name';
+
+            // 创建筹码输入框
+            const chipsInput = document.createElement('input');
+            chipsInput.type = 'number';
+            chipsInput.placeholder = '数量';
+            chipsInput.className = 'player-chips';
+            chipsInput.min = '0';
+
+            // 创建删除按钮
+            const removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.textContent = '删除';
+            removeButton.onclick = function () {
+                removePlayer(this);
+            };
+
+            // 组装行
+            newRow.appendChild(nameInput);
+            newRow.appendChild(chipsInput);
+            newRow.appendChild(removeButton);
+
+            container.appendChild(newRow);
+
+            // 更新所有行号
+            updateRowNumbers();
+        }
+
+        // 更新所有行号
+        function updateRowNumbers() {
+            const playerRows = document.querySelectorAll('.player-row');
+            playerRows.forEach((row, index) => {
+                row.setAttribute('data-row-number', index + 1);
+            });
+        }
+
+        function removePlayer(button) {
+            if (document.querySelectorAll('.player-row').length > 1) {
+                const row = button.parentElement;
+                row.remove();
+                updateRowNumbers(); // 更新行号
+            } else {
+                alert('至少需要保留一个玩家！');
+            }
+        }
+
+        function calculateTransactions() {
+            const initialChips = parseInt(document.getElementById('initialChips').value);
+            const playerRows = document.querySelectorAll('.player-row');
+
+            // 收集玩家数据
+            const players = [];
+            for (let row of playerRows) {
+                const nameElement = row.querySelector('.player-name');
+                const chipsInput = row.querySelector('.player-chips');
+
+                // 获取姓名
+                const name = nameElement.value.trim();
+
+                // 检查必填字段
+                if (!name) {
+                    alert('请输入所有玩家的姓名');
+                    return;
+                }
+
+                const finalChips = parseInt(chipsInput.value) || 0;
+
+                players.push({
+                    name: name,
+                    finalChips: finalChips
+                });
+            }
+
+            // 发送数据到后端进行计算
+            fetch('/calculate_transactions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    initialChips: initialChips,
+                    players: players
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        // 处理非200状态码的响应
+                        return response.json().then(errorData => {
+                            let errorMessage = errorData.message || '服务器错误';
+                            // 如果有总盈亏数据，添加到错误信息中
+                            if (errorData.total_credits !== undefined && errorData.total_debts !== undefined) {
+                                const totalCredits = errorData.total_credits;
+                                const totalDebts = errorData.total_debts;
+                                const difference = Math.abs(totalCredits - totalDebts);
+                                errorMessage += `\n总盈利：${totalCredits}\n总亏损：${totalDebts}\n差值：${difference}`;
+                            }
+                            throw new Error(errorMessage);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    displayResults(data.transactions);
+                })
+                .catch(error => {
+                    console.error('计算出错:', error);
+                    alert(error.message || '计算出错，请检查输入数据');
+                });
+        }
+
+        function displayResults(transactions) {
+            const resultDiv = document.getElementById('result');
+            const transactionsDiv = document.getElementById('transactions');
+
+            if (transactions.length === 0) {
+                transactionsDiv.innerHTML = '<p>没有需要结算的交易</p>';
+            } else {
+                let html = '';
+                for (let transaction of transactions) {
+                    html += `<div class="transaction">${transaction.from} 需要支付 ${transaction.amount} 筹码给 ${transaction.to}</div>`;
+                }
+                transactionsDiv.innerHTML = html;
+            }
+
+            resultDiv.style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简易计算器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .calculator {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        .calculator h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .operations {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        .operations button {
+            flex: 1;
+            margin: 0 5px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .operations button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            text-align: center;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        .result h3 {
+            margin: 0;
+            color: #333;
+        }
+        #resultValue {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>简易计算器</h1>
+        <div class="input-group">
+            <label for="num1">第一个数字:</label>
+            <input type="number" id="num1" step="any">
+        </div>
+        <div class="input-group">
+            <label for="num2">第二个数字:</label>
+            <input type="number" id="num2" step="any">
+        </div>
+        <div class="operations">
+            <button onclick="calculate('add')">+</button>
+            <button onclick="calculate('subtract')">-</button>
+            <button onclick="calculate('multiply')">*</button>
+            <button onclick="calculate('divide')">/</button>
+        </div>
+        <div class="result">
+            <h3>计算结果:</h3>
+            <div id="resultValue">0</div>
+        </div>
+    </div>
+    
+    <script>
+        function calculate(operation) {
+            const num1 = document.getElementById('num1').value;
+            const num2 = document.getElementById('num2').value;
+            const resultElement = document.getElementById('resultValue');
+            
+            // 验证输入
+            if (!num1 || !num2) {
+                resultElement.textContent = '请输入两个数字';
+                resultElement.classList.add('error');
+                return;
+            }
+            
+            resultElement.classList.remove('error');
+            
+            // 发送计算请求
+            fetch('/calculate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    num1: num1,
+                    num2: num2,
+                    operation: operation
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    resultElement.textContent = data.error;
+                    resultElement.classList.add('error');
+                } else {
+                    resultElement.textContent = data.result;
+                    resultElement.classList.remove('error');
+                }
+            })
+            .catch(error => {
+                resultElement.textContent = '计算出错';
+                resultElement.classList.add('error');
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
