@@ -1,0 +1,21 @@
+{
+  "timestamp": "20251216_204117",
+  "initial_chips": 200,
+  "players": [
+    {
+      "name": "于明正",
+      "finalChips": 300
+    },
+    {
+      "name": "庞泽钊",
+      "finalChips": 100
+    }
+  ],
+  "transactions": [
+    {
+      "from": "庞泽钊",
+      "to": "于明正",
+      "amount": 100
+    }
+  ]
+}

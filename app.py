@@ -222,6 +222,48 @@ def player_history_detail(player_name):
                          player_details=player_details, 
                          total_profit=total_profit)
 
+@app.route('/transfer')
+def transfer():
+    """显示两个玩家之间的转账记录界面"""
+    return render_template('transfer.html')
+
+@app.route('/save_transfer', methods=['POST'])
+def save_transfer():
+    """保存两个玩家之间的转账记录"""
+    data = request.json
+    from_player = data.get('from_player')
+    to_player = data.get('to_player')
+    amount = data.get('amount')
+    
+    # 验证输入
+    if not from_player or not to_player or not amount:
+        return jsonify({'error': '请填写完整信息'})
+    
+    if from_player == to_player:
+        return jsonify({'error': '不能给自己转账'})
+    
+    try:
+        amount = int(amount)
+        if amount <= 0:
+            return jsonify({'error': '转账金额必须为正数'})
+    except ValueError:
+        return jsonify({'error': '转账金额必须为数字'})
+    
+    # 创建转账记录数据
+    initial_chips = 200  # 默认初始筹码
+    
+    # 根据转账信息创建玩家数据
+    from_player_data = {"name": from_player, "finalChips": initial_chips - amount}
+    to_player_data = {"name": to_player, "finalChips": initial_chips + amount}
+    
+    # 创建转账记录
+    transaction = {"from": from_player, "to": to_player, "amount": amount}
+    
+    # 保存计算结果到data目录
+    save_calculation_result(initial_chips, [from_player_data, to_player_data], [transaction])
+    
+    return jsonify({'success': '转账记录已保存'})
+
 if __name__ == '__main__':
     # 明确绑定到所有地址，确保外部可访问
     app.run(host='0.0.0.0', port=5010, debug=False)
