@@ -13,3 +13,52 @@ nohup: ignoring input
 2025-12-22 12:26:35,997 - INFO - 115.156.142.238 - - [22/Dec/2025 12:26:35] "GET / HTTP/1.1" 200 -
 2025-12-22 12:26:37,181 - INFO - 115.156.142.238 - - [22/Dec/2025 12:26:37] "GET /player_history HTTP/1.1" 200 -
 2025-12-22 12:26:39,060 - INFO - 115.156.142.238 - - [22/Dec/2025 12:26:39] "GET / HTTP/1.1" 200 -
+2025-12-22 12:38:32,577 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5010
+ * Running on http://10.15.171.146:5010
+2025-12-22 12:38:32,577 - INFO - [33mPress CTRL+C to quit[0m
+2025-12-22 12:38:36,389 - INFO - 127.0.0.1 - - [22/Dec/2025 12:38:36] "GET / HTTP/1.1" 200 -
+2025-12-22 12:38:36,473 - INFO - 127.0.0.1 - - [22/Dec/2025 12:38:36] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-12-22 12:38:39,039 - INFO - 127.0.0.1 - - [22/Dec/2025 12:38:39] "GET /player_history HTTP/1.1" 200 -
+2025-12-22 12:38:41,048 - INFO - 127.0.0.1 - - [22/Dec/2025 12:38:41] "GET /player_history_detail/ÖÜÑ© HTTP/1.1" 200 -
+2025-12-22 12:38:42,374 - INFO - 127.0.0.1 - - [22/Dec/2025 12:38:42] "GET /player_history HTTP/1.1" 200 -
+2025-12-22 12:38:42,718 - INFO - 127.0.0.1 - - [22/Dec/2025 12:38:42] "GET / HTTP/1.1" 200 -
+2025-12-22 12:38:54,734 - INFO - 127.0.0.1 - - [22/Dec/2025 12:38:54] "GET /transfer HTTP/1.1" 200 -
+2025-12-22 12:39:07,178 - INFO - ×ªÕË¼ÇÂ¼ÒÑ±£´æ: ÕÅÈý ×ª 100 ³ïÂë¸ø ÀîËÄ
+2025-12-22 12:39:07,184 - INFO - 127.0.0.1 - - [22/Dec/2025 12:39:07] "POST /save_transfer HTTP/1.1" 200 -
+2025-12-22 12:39:11,175 - INFO - 127.0.0.1 - - [22/Dec/2025 12:39:11] "GET /transfer HTTP/1.1" 200 -
+2025-12-22 12:39:12,924 - INFO - 127.0.0.1 - - [22/Dec/2025 12:39:12] "GET /player_history HTTP/1.1" 200 -
+2025-12-22 12:39:19,621 - INFO - 127.0.0.1 - - [22/Dec/2025 12:39:19] "GET /player_history_detail/ÀîËÄ HTTP/1.1" 200 -
+2025-12-22 12:39:20,590 - INFO - 127.0.0.1 - - [22/Dec/2025 12:39:20] "GET /player_history HTTP/1.1" 200 -
+2025-12-22 12:39:21,022 - INFO - 127.0.0.1 - - [22/Dec/2025 12:39:21] "GET / HTTP/1.1" 200 -
+2025-12-22 12:40:00,079 - INFO - 127.0.0.1 - - [22/Dec/2025 12:40:00] "GET /player_history HTTP/1.1" 200 -
+2025-12-22 12:40:00,818 - INFO - 127.0.0.1 - - [22/Dec/2025 12:40:00] "GET / HTTP/1.1" 200 -
+2025-12-22 12:40:01,552 - INFO - 127.0.0.1 - - [22/Dec/2025 12:40:01] "GET /transfer HTTP/1.1" 200 -
+2025-12-22 12:40:04,114 - INFO - 127.0.0.1 - - [22/Dec/2025 12:40:04] "GET /player_history HTTP/1.1" 200 -
+2025-12-22 12:40:04,951 - INFO - 127.0.0.1 - - [22/Dec/2025 12:40:04] "GET / HTTP/1.1" 200 -
+2025-12-22 12:40:05,860 - INFO - 127.0.0.1 - - [22/Dec/2025 12:40:05] "GET /transfer HTTP/1.1" 200 -
+2025-12-22 12:40:07,255 - INFO - 127.0.0.1 - - [22/Dec/2025 12:40:07] "GET / HTTP/1.1" 200 -
+2025-12-22 12:40:12,040 - INFO - 127.0.0.1 - - [22/Dec/2025 12:40:12] "GET /player_history HTTP/1.1" 200 -
+2025-12-22 12:40:13,119 - INFO - 127.0.0.1 - - [22/Dec/2025 12:40:13] "GET / HTTP/1.1" 200 -
+2025-12-22 12:40:19,407 - INFO - 127.0.0.1 - - [22/Dec/2025 12:40:19] "GET /player_history HTTP/1.1" 200 -
+2025-12-22 12:40:20,906 - INFO - 127.0.0.1 - - [22/Dec/2025 12:40:20] "GET / HTTP/1.1" 200 -
+2025-12-22 12:56:37,261 - INFO - 127.0.0.1 - - [22/Dec/2025 12:56:37] "GET / HTTP/1.1" 200 -
+2025-12-22 12:56:46,816 - INFO - 127.0.0.1 - - [22/Dec/2025 12:56:46] "GET /player_history HTTP/1.1" 200 -
+2025-12-22 12:56:50,548 - INFO - 127.0.0.1 - - [22/Dec/2025 12:56:50] "GET /player_history_detail/ÓÚÃ÷Õý HTTP/1.1" 200 -
+2025-12-22 12:56:54,590 - INFO - 127.0.0.1 - - [22/Dec/2025 12:56:54] "GET /player_history HTTP/1.1" 200 -
+2025-12-22 12:56:55,428 - INFO - 127.0.0.1 - - [22/Dec/2025 12:56:55] "GET / HTTP/1.1" 200 -
+2025-12-22 13:00:26,448 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5010
+ * Running on http://10.15.171.146:5010
+2025-12-22 13:00:26,448 - INFO - [33mPress CTRL+C to quit[0m
+2025-12-22 13:00:31,804 - INFO - 127.0.0.1 - - [22/Dec/2025 13:00:31] "GET / HTTP/1.1" 200 -
+2025-12-22 13:00:53,851 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5010
+ * Running on http://10.15.171.146:5010
+2025-12-22 13:00:53,852 - INFO - [33mPress CTRL+C to quit[0m
+2025-12-22 13:01:08,659 - INFO - 127.0.0.1 - - [22/Dec/2025 13:01:08] "GET / HTTP/1.1" 200 -
+2025-12-22 13:01:09,632 - INFO - 127.0.0.1 - - [22/Dec/2025 13:01:09] "GET /player_history HTTP/1.1" 200 -
+2025-12-22 13:01:14,202 - INFO - 127.0.0.1 - - [22/Dec/2025 13:01:14] "GET / HTTP/1.1" 200 -
