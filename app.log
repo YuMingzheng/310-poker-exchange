@@ -4,24 +4,12 @@ nohup: ignoring input
    WARNING: This is a development server. Do not use it in a production deployment.
    Use a production WSGI server instead.
  * Debug mode: off
-Traceback (most recent call last):
-  File "/root/test2/app.py", line 269, in <module>
-    app.run(host='0.0.0.0', port=5010, debug=False)
-  File "/root/test2/venv/lib/python3.12/site-packages/flask/app.py", line 922, in run
-    run_simple(t.cast(str, host), port, self, **options)
-  File "/root/test2/venv/lib/python3.12/site-packages/werkzeug/serving.py", line 1008, in run_simple
-    inner115.156.141.239 - - [20/Dec/2025 14:17:49] "GET / HTTP/1.1" 200 -
-115.156.141.239 - - [20/Dec/2025 14:17:54] "GET /player_history HTTP/1.1" 200 -
-115.156.141.239 - - [20/Dec/2025 14:17:57] "GET / HTTP/1.1" 200 -
-115.156.141.239 - - [20/Dec/2025 14:17:59] "GET /transfer HTTP/1.1" 200 -
-115.156.141.239 - - [20/Dec/2025 14:18:02] "GET / HTTP/1.1" 200 -
-180.163.29.79 - - [20/Dec/2025 14:18:03] "GET / HTTP/1.1" 200 -
-.__init__(server_address, handler)  # type: ignore
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3.12/socketserver.py", line 457, in __init__
-    self.server_bind()
-  File "/usr/lib/python3.12/http/server.py", line 136, in server_bind
-    socketserver.TCPServer.server_bind(self)
-  File "/usr/lib/python3.12/socketserver.py", line 473, in server_bind
-    self.socket.bind(self.server_address)
-OSError: [Errno 98] Address already in use
+2025-12-22 12:26:22,023 - WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+2025-12-22 12:26:22,025 - INFO -  * Running on http://172.24.49.179:5010/ (Press CTRL+C to quit)
+2025-12-22 12:26:28,577 - INFO - 180.163.29.79 - - [22/Dec/2025 12:26:28] "GET / HTTP/1.1" 200 -
+2025-12-22 12:26:30,454 - INFO - 115.156.142.238 - - [22/Dec/2025 12:26:30] "GET / HTTP/1.1" 200 -
+2025-12-22 12:26:33,929 - INFO - 115.156.142.238 - - [22/Dec/2025 12:26:33] "GET /transfer HTTP/1.1" 200 -
+2025-12-22 12:26:35,997 - INFO - 115.156.142.238 - - [22/Dec/2025 12:26:35] "GET / HTTP/1.1" 200 -
+2025-12-22 12:26:37,181 - INFO - 115.156.142.238 - - [22/Dec/2025 12:26:37] "GET /player_history HTTP/1.1" 200 -
+2025-12-22 12:26:39,060 - INFO - 115.156.142.238 - - [22/Dec/2025 12:26:39] "GET / HTTP/1.1" 200 -

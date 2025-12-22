@@ -1,13 +1,49 @@
 import os
 import json
+import logging
 from datetime import datetime
 from flask import Flask, render_template, request, jsonify
+
+# 配置日志
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('app.log'),
+        logging.StreamHandler()
+    ]
+)
 
 app = Flask(__name__)
 
 # 确保data目录存在
 if not os.path.exists('data'):
     os.makedirs('data')
+
+# 公共函数
+def get_result_files():
+    """获取所有历史记录文件"""
+    return [f for f in os.listdir('data') if f.startswith('result_') and f.endswith('.json')]
+
+def read_json_file(file_path, filename):
+    """读取并解析JSON文件"""
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception as e:
+        logging.error(f"读取文件 {filename} 时出错: {e}")
+        return None
+
+def format_timestamp(timestamp):
+    """格式化时间戳为易读形式"""
+    if not timestamp:
+        return ''
+    try:
+        # 解析时间戳 (格式: YYYYMMDD_HHMMSS)
+        dt = datetime.strptime(timestamp, "%Y%m%d_%H%M%S")
+        return dt.strftime("%Y-%m-%d %H:%M:%S")
+    except ValueError:
+        return timestamp
 
 @app.route('/')
 def index():
@@ -39,8 +75,10 @@ def calculate_transactions():
         return jsonify({
             'error': '数据错误',
             'message': '玩家总亏损与总盈利不相等，请检查输入的筹码数量',
-            'total_credits': total_credits,
-            'total_debts': total_debts
+            'details': {
+                'total_credits': total_credits,
+                'total_debts': total_debts
+            }
         }), 400
     
     # 使用贪心算法匹配债权人和债务人
@@ -50,33 +88,23 @@ def calculate_transactions():
     while i < len(creditors) and j < len(debtors):
         creditor = creditors[i]
         debtor = debtors[j]
+        transfer_amount = min(creditor['amount'], debtor['amount'])
         
-        if creditor['amount'] > debtor['amount']:
-            # 债务人付清全部欠款，但债权人还未收完
-            transactions.append({
-                'from': debtor['name'],
-                'to': creditor['name'],
-                'amount': debtor['amount']
-            })
-            creditor['amount'] -= debtor['amount']
-            j += 1
-        elif creditor['amount'] < debtor['amount']:
-            # 债权人收完全部款项，但债务人还有欠款
-            transactions.append({
-                'from': debtor['name'],
-                'to': creditor['name'],
-                'amount': creditor['amount']
-            })
-            debtor['amount'] -= creditor['amount']
+        # 添加转账记录
+        transactions.append({
+            'from': debtor['name'],
+            'to': creditor['name'],
+            'amount': transfer_amount
+        })
+        
+        # 更新剩余金额
+        creditor['amount'] -= transfer_amount
+        debtor['amount'] -= transfer_amount
+        
+        # 移动指针
+        if creditor['amount'] == 0:
             i += 1
-        else:
-            # 恰好相等
-            transactions.append({
-                'from': debtor['name'],
-                'to': creditor['name'],
-                'amount': creditor['amount']
-            })
-            i += 1
+        if debtor['amount'] == 0:
             j += 1
     
     # 保存计算结果到data目录
@@ -116,32 +144,31 @@ def save_calculation_result(initial_chips, players, transactions):
 def player_history():
     """显示所有玩家的历史总盈亏"""
     # 获取所有历史记录文件
-    result_files = [f for f in os.listdir('data') if f.startswith('result_') and f.endswith('.json')]
+    result_files = get_result_files()
     
     # 计算每个玩家的总盈亏
     player_totals = {}
     
     for filename in result_files:
         file_path = os.path.join('data', filename)
-        try:
-            with open(file_path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                initial_chips = data.get('initial_chips', 200)
-                players = data.get('players', [])
-                
-                for player in players:
-                    name = player['name']
-                    final_chips = player['finalChips']
-                    # 计算该玩家在本次记录中的盈亏
-                    profit = final_chips - initial_chips
-                    
-                    # 更新总盈亏
-                    if name in player_totals:
-                        player_totals[name] += profit
-                    else:
-                        player_totals[name] = profit
-        except Exception as e:
-            print(f"读取文件 {filename} 时出错: {e}")
+        data = read_json_file(file_path, filename)
+        if data is None:
+            continue
+            
+        initial_chips = data.get('initial_chips', 200)
+        players = data.get('players', [])
+        
+        for player in players:
+            name = player['name']
+            final_chips = player['finalChips']
+            # 计算该玩家在本次记录中的盈亏
+            profit = final_chips - initial_chips
+            
+            # 更新总盈亏
+            if name in player_totals:
+                player_totals[name] += profit
+            else:
+                player_totals[name] = profit
     
     # 将字典转换为列表以便在模板中排序
     player_list = [{'name': name, 'total_profit': total} for name, total in player_totals.items()]
@@ -155,7 +182,7 @@ def player_history():
 def player_history_detail(player_name):
     """显示指定玩家的盈亏明细"""
     # 获取所有历史记录文件
-    result_files = [f for f in os.listdir('data') if f.startswith('result_') and f.endswith('.json')]
+    result_files = get_result_files()
     
     # 收集该玩家的所有历史记录
     player_details = []
@@ -163,56 +190,48 @@ def player_history_detail(player_name):
     
     for filename in result_files:
         file_path = os.path.join('data', filename)
-        try:
-            with open(file_path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                timestamp = data.get('timestamp', '')
-                initial_chips = data.get('initial_chips', 200)
-                players = data.get('players', [])
-                transactions = data.get('transactions', [])
+        data = read_json_file(file_path, filename)
+        if data is None:
+            continue
+            
+        timestamp = data.get('timestamp', '')
+        initial_chips = data.get('initial_chips', 200)
+        players = data.get('players', [])
+        transactions = data.get('transactions', [])
+        
+        # 查找当前玩家的记录
+        for player in players:
+            if player['name'] == player_name:
+                final_chips = player['finalChips']
+                profit = final_chips - initial_chips
+                total_profit += profit
                 
-                # 查找当前玩家的记录
-                for player in players:
-                    if player['name'] == player_name:
-                        final_chips = player['finalChips']
-                        profit = final_chips - initial_chips
-                        total_profit += profit
-                        
-                        # 转换时间格式为易读形式
-                        formatted_time = ''
-                        if timestamp:
-                            try:
-                                # 解析时间戳 (格式: YYYYMMDD_HHMMSS)
-                                dt = datetime.strptime(timestamp, "%Y%m%d_%H%M%S")
-                                formatted_time = dt.strftime("%Y-%m-%d %H:%M:%S")
-                            except ValueError:
-                                formatted_time = timestamp
-                        
-                        # 添加明细记录
-                        detail = {
-                            'timestamp': formatted_time,
-                            'initial_chips': initial_chips,
-                            'final_chips': final_chips,
-                            'profit': profit
-                        }
-                        
-                        # 特殊处理：只有两个玩家的情况
-                        if len(players) == 2:
-                            for transaction in transactions:
-                                if transaction['from'] == player_name:
-                                    # 当前玩家是转账方（亏损）
-                                    detail['transfer_info'] = f"转账给 {transaction['to']} {transaction['amount']} 筹码"
-                                    detail['is_transfer_out'] = True
-                                    break
-                                elif transaction['to'] == player_name:
-                                    # 当前玩家是收款方（盈利）
-                                    detail['transfer_info'] = f"从 {transaction['from']} 收到 {transaction['amount']} 筹码"
-                                    detail['is_transfer_in'] = True
-                                    break
-                        
-                        player_details.append(detail)
-        except Exception as e:
-            print(f"读取文件 {filename} 时出错: {e}")
+                # 转换时间格式为易读形式
+                formatted_time = format_timestamp(timestamp)
+                
+                # 添加明细记录
+                detail = {
+                    'timestamp': formatted_time,
+                    'initial_chips': initial_chips,
+                    'final_chips': final_chips,
+                    'profit': profit
+                }
+                
+                # 特殊处理：只有两个玩家的情况
+                if len(players) == 2:
+                    for transaction in transactions:
+                        if transaction['from'] == player_name:
+                            # 当前玩家是转账方（亏损）
+                            detail['transfer_info'] = f"转账给 {transaction['to']} {transaction['amount']} 筹码"
+                            detail['is_transfer_out'] = True
+                            break
+                        elif transaction['to'] == player_name:
+                            # 当前玩家是收款方（盈利）
+                            detail['transfer_info'] = f"从 {transaction['from']} 收到 {transaction['amount']} 筹码"
+                            detail['is_transfer_in'] = True
+                            break
+                
+                player_details.append(detail)
     
     # 按时间倒序排序
     player_details.sort(key=lambda x: x['timestamp'], reverse=True)
@@ -231,19 +250,19 @@ def transfer():
 def save_transfer():
     """保存两个玩家之间的转账记录"""
     data = request.json
-    from_player = data.get('from_player')
-    to_player = data.get('to_player')
-    amount = data.get('amount')
+    sender = data.get('from_player')
+    receiver = data.get('to_player')
+    amount_str = data.get('amount')
     
     # 验证输入
-    if not from_player or not to_player or not amount:
+    if not sender or not receiver or not amount_str:
         return jsonify({'error': '请填写完整信息'})
     
-    if from_player == to_player:
+    if sender == receiver:
         return jsonify({'error': '不能给自己转账'})
     
     try:
-        amount = int(amount)
+        amount = int(amount_str)
         if amount <= 0:
             return jsonify({'error': '转账金额必须为正数'})
     except ValueError:
@@ -253,14 +272,15 @@ def save_transfer():
     initial_chips = 200  # 默认初始筹码
     
     # 根据转账信息创建玩家数据
-    from_player_data = {"name": from_player, "finalChips": initial_chips - amount}
-    to_player_data = {"name": to_player, "finalChips": initial_chips + amount}
+    sender_data = {"name": sender, "finalChips": initial_chips - amount}
+    receiver_data = {"name": receiver, "finalChips": initial_chips + amount}
     
     # 创建转账记录
-    transaction = {"from": from_player, "to": to_player, "amount": amount}
+    transaction = {"from": sender, "to": receiver, "amount": amount}
     
     # 保存计算结果到data目录
-    save_calculation_result(initial_chips, [from_player_data, to_player_data], [transaction])
+    save_calculation_result(initial_chips, [sender_data, receiver_data], [transaction])
+    logging.info(f"转账记录已保存: {sender} 转 {amount} 筹码给 {receiver}")
     
     return jsonify({'success': '转账记录已保存'})
 

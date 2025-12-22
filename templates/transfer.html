@@ -136,30 +136,30 @@
 <body>
     <div class="container">
         <h1>记录玩家转账</h1>
-        
+
         <div class="transfer-container">
             <div class="form-group">
-                <label for="fromPlayer">转账人</label>
-                <input type="text" id="fromPlayer" placeholder="输入转账人姓名">
+                <label for="fromPlayer">转账</label>
+                <input type="text" id="fromPlayer" placeholder="输入姓名">
             </div>
-            
+
             <div class="transfer-arrow">→</div>
-            
+
             <div class="form-group">
-                <label for="toPlayer">收款人</label>
-                <input type="text" id="toPlayer" placeholder="输入收款人姓名">
+                <label for="toPlayer">收款</label>
+                <input type="text" id="toPlayer" placeholder="输入姓名">
             </div>
         </div>
-        
+
         <div class="amount-container">
             <div class="form-group">
-                <label for="amount">转账金额</label>
-                <input type="number" id="amount" placeholder="输入转账金额" min="1">
+                <label for="amount">数量</label>
+                <input type="number" id="amount" placeholder="输入数量" min="1">
             </div>
         </div>
-        
+
         <button class="btn" onclick="saveTransfer()">保存转账记录</button>
-        
+
         <a href="/" class="back-link">返回主页</a>
     </div>
 
@@ -168,34 +168,34 @@
             const fromPlayer = document.getElementById('fromPlayer').value.trim();
             const toPlayer = document.getElementById('toPlayer').value.trim();
             const amount = document.getElementById('amount').value.trim();
-            
+
             // 验证输入
             if (!fromPlayer) {
                 alert('请输入转账人姓名');
                 return;
             }
-            
+
             if (!toPlayer) {
                 alert('请输入收款人姓名');
                 return;
             }
-            
+
             if (fromPlayer === toPlayer) {
                 alert('不能给自己转账');
                 return;
             }
-            
+
             if (!amount) {
                 alert('请输入转账金额');
                 return;
             }
-            
+
             const amountNum = parseInt(amount);
             if (isNaN(amountNum) || amountNum <= 0) {
                 alert('转账金额必须为正数');
                 return;
             }
-            
+
             // 发送保存请求
             fetch('/save_transfer', {
                 method: 'POST',
@@ -208,26 +208,26 @@
                     amount: amountNum
                 })
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    alert(data.error);
-                } else if (data.success) {
-                    alert(data.success);
-                    // 清空表单
-                    document.getElementById('fromPlayer').value = '';
-                    document.getElementById('toPlayer').value = '';
-                    document.getElementById('amount').value = '';
-                }
-            })
-            .catch(error => {
-                console.error('保存出错:', error);
-                alert('保存出错，请稍后重试');
-            });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                    } else if (data.success) {
+                        alert(data.success);
+                        // 清空表单
+                        document.getElementById('fromPlayer').value = '';
+                        document.getElementById('toPlayer').value = '';
+                        document.getElementById('amount').value = '';
+                    }
+                })
+                .catch(error => {
+                    console.error('保存出错:', error);
+                    alert('保存出错，请稍后重试');
+                });
         }
-        
+
         // 监听回车键
-        document.addEventListener('keypress', function(e) {
+        document.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 saveTransfer();
             }
