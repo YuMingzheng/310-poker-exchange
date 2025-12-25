@@ -321,19 +321,19 @@
             })
                 .then(response => {
                     if (!response.ok) {
-                        // 处理非200状态码的响应
-                        return response.json().then(errorData => {
-                            let errorMessage = errorData.message || '服务器错误';
-                            // 如果有总盈亏数据，添加到错误信息中
-                            if (errorData.total_credits !== undefined && errorData.total_debts !== undefined) {
-                                const totalCredits = errorData.total_credits;
-                                const totalDebts = errorData.total_debts;
-                                const difference = Math.abs(totalCredits - totalDebts);
-                                errorMessage += `\n总盈利：${totalCredits}\n总亏损：${totalDebts}\n差值：${difference}`;
-                            }
-                            throw new Error(errorMessage);
-                        });
-                    }
+                    // 处理非200状态码的响应
+                    return response.json().then(errorData => {
+                        let errorMessage = errorData.message || '服务器错误';
+                        // 如果有总盈亏数据，添加到错误信息中
+                        if (errorData.details && errorData.details.total_credits !== undefined && errorData.details.total_debts !== undefined) {
+                            const totalCredits = errorData.details.total_credits;
+                            const totalDebts = errorData.details.total_debts;
+                            const difference = Math.abs(totalCredits - totalDebts);
+                            errorMessage += `\n总盈利：${totalCredits}\n总亏损：${totalDebts}\n差值：${difference}`;
+                        }
+                        throw new Error(errorMessage);
+                    });
+                }
                     return response.json();
                 })
                 .then(data => {

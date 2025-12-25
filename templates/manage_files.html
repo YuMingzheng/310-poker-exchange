@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件管理</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .date-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .date-header {
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .file-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        .file-table th,
+        .file-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .file-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .file-table tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .file-name {
+            font-family: monospace;
+            color: #007bff;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .file-name:hover {
+            color: #0056b3;
+        }
+
+        .file-size {
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 4px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-header {
+            padding: 10px 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .file-content {
+            font-family: monospace;
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            padding: 40px 0;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            .file-table th,
+            .file-table td {
+                padding: 8px;
+                font-size: 14px;
+            }
+
+            .delete-btn {
+                padding: 4px 8px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="/player_history" class="back-link">← 返回玩家历史总盈亏</a>
+        <h1>文件管理</h1>
+
+        {% if sorted_dates %}
+        {% for date in sorted_dates %}
+        <div class="date-section">
+            <div class="date-header">{{ date }}</div>
+            <table class="file-table">
+                <thead>
+                    <tr>
+                        <th>文件名</th>
+                        <th>创建时间</th>
+                        <th>文件大小</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for file in files_by_date[date] %}
+                    <tr>
+                        <td class="file-name" onclick="showFileContent('{{ file.filename }}')">{{ file.filename }}</td>
+                        <td>{{ file.create_time }}</td>
+                        <td class="file-size">{{ file.file_size }} bytes</td>
+                        <td>
+                            <button class="delete-btn" onclick="deleteFile('{{ file.filename }}')">删除</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="empty-message">
+            <p>暂无历史记录文件</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- 模态框 -->
+    <div id="fileContentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h2 class="modal-title" id="modalFilename"></h2>
+            </div>
+            <div class="file-content" id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // 获取模态框
+        var modal = document.getElementById("fileContentModal");
+        var modalFilename = document.getElementById("modalFilename");
+        var modalContent = document.getElementById("modalContent");
+
+        // 显示文件内容
+        function showFileContent(filename) {
+            modalFilename.textContent = `文件内容: ${filename}`;
+            modalContent.textContent = "正在加载文件内容...";
+
+            fetch(`/get_file_content/${filename}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // 格式化JSON内容，使其更易读
+                        try {
+                            var parsedContent = JSON.parse(data.content);
+                            modalContent.textContent = JSON.stringify(parsedContent, null, 2);
+                        } catch (e) {
+                            modalContent.textContent = data.content;
+                        }
+                    } else {
+                        modalContent.textContent = "加载文件内容失败: " + data.message;
+                    }
+                })
+                .catch(error => {
+                    console.error('加载文件内容出错:', error);
+                    modalContent.textContent = "加载文件内容出错，请稍后重试";
+                });
+
+            modal.style.display = "block";
+        }
+
+        // 关闭模态框
+        function closeModal() {
+            modal.style.display = "none";
+        }
+
+        // 点击模态框外部关闭模态框
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        // 按ESC键关闭模态框
+        document.onkeydown = function (event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        }
+
+        // 删除文件功能
+        function deleteFile(filename) {
+            if (confirm(`确定要删除文件 ${filename} 吗？此操作不可恢复。`)) {
+                fetch(`/delete_file/${filename}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.message);
+                            // 刷新页面
+                            window.location.reload();
+                        } else {
+                            alert('删除失败: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('删除出错:', error);
+                        alert('删除出错，请稍后重试');
+                    });
+            }
+        }
+    </script>
+</body>
+
+</html>

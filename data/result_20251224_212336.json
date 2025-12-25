@@ -1,0 +1,21 @@
+{
+  "timestamp": "20251224_212336",
+  "initial_chips": 200,
+  "players": [
+    {
+      "name": "于明正",
+      "finalChips": 100
+    },
+    {
+      "name": "周雪",
+      "finalChips": 300
+    }
+  ],
+  "transactions": [
+    {
+      "from": "于明正",
+      "to": "周雪",
+      "amount": 100
+    }
+  ]
+}

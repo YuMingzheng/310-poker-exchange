@@ -4,12 +4,15 @@ nohup: ignoring input
    WARNING: This is a development server. Do not use it in a production deployment.
    Use a production WSGI server instead.
  * Debug mode: off
-2025-12-22 12:26:22,023 - WARNING -  * Running on all addresses.
+2025-12-25 11:27:40,237 - WARNING -  * Running on all addresses.
    WARNING: This is a development server. Do not use it in a production deployment.
-2025-12-22 12:26:22,025 - INFO -  * Running on http://172.24.49.179:5010/ (Press CTRL+C to quit)
-2025-12-22 12:26:28,577 - INFO - 180.163.29.79 - - [22/Dec/2025 12:26:28] "GET / HTTP/1.1" 200 -
-2025-12-22 12:26:30,454 - INFO - 115.156.142.238 - - [22/Dec/2025 12:26:30] "GET / HTTP/1.1" 200 -
-2025-12-22 12:26:33,929 - INFO - 115.156.142.238 - - [22/Dec/2025 12:26:33] "GET /transfer HTTP/1.1" 200 -
-2025-12-22 12:26:35,997 - INFO - 115.156.142.238 - - [22/Dec/2025 12:26:35] "GET / HTTP/1.1" 200 -
-2025-12-22 12:26:37,181 - INFO - 115.156.142.238 - - [22/Dec/2025 12:26:37] "GET /player_history HTTP/1.1" 200 -
-2025-12-22 12:26:39,060 - INFO - 115.156.142.238 - - [22/Dec/2025 12:26:39] "GET / HTTP/1.1" 200 -
+2025-12-25 11:27:40,237 - INFO -  * Running on http://172.24.49.179:5010/ (Press CTRL+C to quit)
+2025-12-25 11:27:41,355 - INFO - 115.156.141.154 - - [25/Dec/2025 11:27:41] "GET / HTTP/1.1" 200 -
+2025-12-25 11:27:42,709 - INFO - 115.156.141.154 - - [25/Dec/2025 11:27:42] "GET /player_history HTTP/1.1" 200 -
+2025-12-25 11:27:43,949 - INFO - 115.156.141.154 - - [25/Dec/2025 11:27:43] "GET /manage_files HTTP/1.1" 200 -
+2025-12-25 11:27:49,978 - INFO - 115.156.141.154 - - [25/Dec/2025 11:27:49] "GET /get_file_content/result_20251224_221506.json HTTP/1.1" 200 -
+2025-12-25 11:27:59,177 - INFO - 127.0.0.1 - - [25/Dec/2025 11:27:59] "GET /get_file_content/result_20251204_213206.json HTTP/1.1" 200 -
+2025-12-25 11:28:18,194 - INFO - 115.156.141.154 - - [25/Dec/2025 11:28:18] "GET /player_history HTTP/1.1" 200 -
+2025-12-25 11:28:23,082 - INFO - 115.156.141.154 - - [25/Dec/2025 11:28:23] "GET /player_history_detail/周雪 HTTP/1.1" 200 -
+2025-12-25 11:28:24,748 - INFO - 115.156.141.154 - - [25/Dec/2025 11:28:24] "GET /player_history HTTP/1.1" 200 -
+2025-12-25 11:28:46,193 - INFO - 115.156.141.154 - - [25/Dec/2025 11:28:46] "GET / HTTP/1.1" 200 -

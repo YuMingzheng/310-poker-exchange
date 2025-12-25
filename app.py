@@ -284,6 +284,82 @@ def save_transfer():
     
     return jsonify({'success': '转账记录已保存'})
 
+@app.route('/manage_files')
+def manage_files():
+    """显示文件管理界面"""
+    # 获取所有历史记录文件
+    result_files = get_result_files()
+    
+    # 按文件名中的时间戳归类文件
+    files_by_date = {}
+    for filename in result_files:
+        file_path = os.path.join('data', filename)
+        try:
+            # 从文件名中提取时间戳 (格式: result_YYYYMMDD_HHMMSS.json)
+            timestamp_str = filename.replace('result_', '').replace('.json', '')
+            if len(timestamp_str) != 15 or timestamp_str[8] != '_':
+                raise ValueError(f"文件名格式不正确: {filename}")
+            
+            # 解析时间戳
+            dt = datetime.strptime(timestamp_str, "%Y%m%d_%H%M%S")
+            date_str = dt.strftime('%Y-%m-%d')
+            time_str = dt.strftime('%H:%M:%S')
+            
+            # 获取文件大小
+            file_size = os.path.getsize(file_path)
+            
+            # 添加到对应日期的列表
+            if date_str not in files_by_date:
+                files_by_date[date_str] = []
+            
+            files_by_date[date_str].append({
+                'filename': filename,
+                'create_time': time_str,
+                'file_size': file_size,
+                'timestamp': timestamp_str
+            })
+        except Exception as e:
+            logging.error(f"获取文件 {filename} 信息时出错: {e}")
+    
+    # 按日期降序排序
+    sorted_dates = sorted(files_by_date.keys(), reverse=True)
+    
+    # 为每个日期的文件按时间降序排序
+    for date in sorted_dates:
+        files_by_date[date].sort(key=lambda x: x['timestamp'], reverse=True)
+    
+    return render_template('manage_files.html', files_by_date=files_by_date, sorted_dates=sorted_dates)
+
+@app.route('/get_file_content/<filename>')
+def get_file_content(filename):
+    """获取指定文件的内容"""
+    try:
+        file_path = os.path.join('data', filename)
+        if os.path.exists(file_path):
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            return jsonify({'success': True, 'content': content})
+        else:
+            return jsonify({'success': False, 'message': f'文件 {filename} 不存在'}), 404
+    except Exception as e:
+        logging.error(f"读取文件 {filename} 时出错: {e}")
+        return jsonify({'success': False, 'message': f'读取文件时出错: {str(e)}'}), 500
+
+@app.route('/delete_file/<filename>', methods=['POST'])
+def delete_file(filename):
+    """删除指定的文件"""
+    try:
+        file_path = os.path.join('data', filename)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            logging.info(f"已删除文件: {filename}")
+            return jsonify({'success': True, 'message': f'文件 {filename} 已删除'})
+        else:
+            return jsonify({'success': False, 'message': f'文件 {filename} 不存在'}), 404
+    except Exception as e:
+        logging.error(f"删除文件 {filename} 时出错: {e}")
+        return jsonify({'success': False, 'message': f'删除文件时出错: {str(e)}'}), 500
+
 if __name__ == '__main__':
     # 明确绑定到所有地址，确保外部可访问
     app.run(host='0.0.0.0', port=5010, debug=False)
