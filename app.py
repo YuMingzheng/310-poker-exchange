@@ -2,6 +2,7 @@ import os
 import json
 import logging
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from flask import Flask, render_template, request, jsonify
 
 # 配置日志
@@ -127,7 +128,7 @@ def get_users():
 
 def save_calculation_result(initial_chips, players, transactions):
     """保存计算结果到data目录"""
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now(ZoneInfo('Asia/Shanghai')).strftime("%Y%m%d_%H%M%S")
     filename = f"data/result_{timestamp}.json"
     
     result_data = {
