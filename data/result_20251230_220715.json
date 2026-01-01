@@ -1,0 +1,75 @@
+{
+  "timestamp": "20251230_220715",
+  "initial_chips": 200,
+  "players": [
+    {
+      "name": "庞泽钊",
+      "finalChips": 210
+    },
+    {
+      "name": "何昱晴",
+      "finalChips": 157
+    },
+    {
+      "name": "周雪",
+      "finalChips": 210
+    },
+    {
+      "name": "于明正",
+      "finalChips": 405
+    },
+    {
+      "name": "张畅",
+      "finalChips": 100
+    },
+    {
+      "name": "蒋飞颖",
+      "finalChips": 52
+    },
+    {
+      "name": "李淑婉",
+      "finalChips": 248
+    },
+    {
+      "name": "潘云飞",
+      "finalChips": 218
+    }
+  ],
+  "transactions": [
+    {
+      "from": "何昱晴",
+      "to": "庞泽钊",
+      "amount": 10
+    },
+    {
+      "from": "何昱晴",
+      "to": "周雪",
+      "amount": 10
+    },
+    {
+      "from": "何昱晴",
+      "to": "于明正",
+      "amount": 23
+    },
+    {
+      "from": "张畅",
+      "to": "于明正",
+      "amount": 100
+    },
+    {
+      "from": "蒋飞颖",
+      "to": "于明正",
+      "amount": 82
+    },
+    {
+      "from": "蒋飞颖",
+      "to": "李淑婉",
+      "amount": 48
+    },
+    {
+      "from": "蒋飞颖",
+      "to": "潘云飞",
+      "amount": 18
+    }
+  ]
+}
