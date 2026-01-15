@@ -1,0 +1,21 @@
+{
+  "timestamp": "20260108_204403",
+  "initial_chips": 200,
+  "players": [
+    {
+      "name": "何昱晴",
+      "finalChips": 100
+    },
+    {
+      "name": "庞泽钊",
+      "finalChips": 300
+    }
+  ],
+  "transactions": [
+    {
+      "from": "何昱晴",
+      "to": "庞泽钊",
+      "amount": 100
+    }
+  ]
+}

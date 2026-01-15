@@ -1,0 +1,66 @@
+{
+  "timestamp": "20260108_220148",
+  "initial_chips": 200,
+  "players": [
+    {
+      "name": "庞泽钊",
+      "finalChips": 250
+    },
+    {
+      "name": "周雪",
+      "finalChips": 253
+    },
+    {
+      "name": "刘奕涵",
+      "finalChips": 267
+    },
+    {
+      "name": "张畅",
+      "finalChips": 236
+    },
+    {
+      "name": "潘云飞",
+      "finalChips": 147
+    },
+    {
+      "name": "何昱晴",
+      "finalChips": 149
+    },
+    {
+      "name": "于明正",
+      "finalChips": 98
+    }
+  ],
+  "transactions": [
+    {
+      "from": "潘云飞",
+      "to": "庞泽钊",
+      "amount": 50
+    },
+    {
+      "from": "潘云飞",
+      "to": "周雪",
+      "amount": 3
+    },
+    {
+      "from": "何昱晴",
+      "to": "周雪",
+      "amount": 50
+    },
+    {
+      "from": "何昱晴",
+      "to": "刘奕涵",
+      "amount": 1
+    },
+    {
+      "from": "于明正",
+      "to": "刘奕涵",
+      "amount": 66
+    },
+    {
+      "from": "于明正",
+      "to": "张畅",
+      "amount": 36
+    }
+  ]
+}
