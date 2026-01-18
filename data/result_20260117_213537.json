@@ -1,0 +1,21 @@
+{
+  "timestamp": "20260117_213537",
+  "initial_chips": 200,
+  "players": [
+    {
+      "name": "潘云飞",
+      "finalChips": 0
+    },
+    {
+      "name": "李淑婉",
+      "finalChips": 400
+    }
+  ],
+  "transactions": [
+    {
+      "from": "潘云飞",
+      "to": "李淑婉",
+      "amount": 200
+    }
+  ]
+}
